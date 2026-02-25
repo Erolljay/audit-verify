@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Authentication | Tallo CPA</title>
+    <style>
+        :root { --primary-blue: #003366; --accent-blue: #0056b3; --light-bg: #f8f9fa; --success-green: #28a745; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--light-bg); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #333; }
+        .container { background: white; max-width: 500px; width: 100%; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; border-top: 8px solid var(--primary-blue); }
+        .header { background: white; padding: 30px 20px; text-align: center; }
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary-blue); letter-spacing: 1px; margin: 0; }
+        .logo span { color: var(--accent-blue); }
+        .content { padding: 0 30px 30px 30px; }
+        .welcome-msg { text-align: center; margin-bottom: 25px; }
+        .welcome-msg h2 { margin: 0; color: #444; font-size: 20px; }
+        .welcome-msg p { color: #666; font-size: 14px; line-height: 1.6; }
+        
+        .result-box { padding: 20px; border-radius: 8px; margin-bottom: 20px; display: none; }
+        .valid { background-color: #e9f7ef; border: 1px solid var(--success-green); display: block; }
+        .invalid { background-color: #fdf2f2; border: 1px solid #dc3545; display: block; }
+        
+        .status-header { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+        .status-header h3 { margin: 0; font-size: 18px; }
+        
+        .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 15px; }
+        .detail-row:last-child { border-bottom: none; }
+        .label { color: #888; font-weight: 500; }
+        .value { color: #222; font-weight: bold; text-align: right; }
+        
+        .instruction { font-size: 13px; color: #777; font-style: italic; background: #fffde7; padding: 10px; border-radius: 4px; border: 1px solid #ffe58f; margin-top: 20px; }
+        .footer-link { text-align: center; margin-top: 25px; }
+        .footer-link a { color: var(--accent-blue); text-decoration: none; font-weight: bold; font-size: 14px; }
+        .footer-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <p class="logo">TALLO <span>CPA</span></p>
+    </div>
+
+    <div class="content">
+        <div id="loading">Verifying certificate authenticity...</div>
+
+        <div id="result-container" style="display:none;">
+            <div class="welcome-msg">
+                <h2>Certificate Authentication</h2>
+                <p>Welcome to the official Tallo CPA verification portal. Please verify the details below against the document you are holding.</p>
+            </div>
+
+            <div id="status-box" class="result-box">
+                <div class="status-header" id="status-head"></div>
+                
+                <div class="detail-row"><span class="label">Client Name:</span> <span class="value" id="res-name"></span></div>
+                <div class="detail-row"><span class="label">Audit Year:</span> <span class="value" id="res-year"></span></div>
+                <div class="detail-row"><span class="label">Classification:</span> <span class="value" id="res-class"></span></div>
+                <div class="detail-row"><span class="label">Certificate ID:</span> <span class="value" id="res-id"></span></div>
+                <div class="detail-row"><span class="label">Verified on:</span> <span class="value" id="res-date"></span></div>
+            </div>
+
+            <p class="instruction"><strong>Important:</strong> The physical document is only valid if the details above exactly match the information printed on the certificate.</p>
+        </div>
+
+        <div class="footer-link">
+            <a href="https://www.tallocpa.com">← Return to Homepage</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    fetch('database.json')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+            
+            const cert = data[id];
+            const statusBox = document.getElementById('status-box');
+            const statusHead = document.getElementById('status-head');
+
+            if (cert) {
+                statusBox.classList.add('valid');
+                statusHead.innerHTML = '<h3 style="color:var(--success-green)">✅ AUTHENTIC DOCUMENT</h3>';
+                document.getElementById('res-name').innerText = cert.name;
+                document.getElementById('res-year').innerText = cert.year;
+                document.getElementById('res-class').innerText = cert.classification;
+                document.getElementById('res-id').innerText = id;
+                document.getElementById('res-date').innerText = cert.verifiedAt;
+            } else {
+                statusBox.classList.add('invalid');
+                statusBox.innerHTML = '<h3 style="color:#dc3545">❌ INVALID CERTIFICATE</h3><p style="text-align:center">This certificate ID could not be found in our records.</p>';
+            }
+        });
+</script>
+
+</body>
+</html>
