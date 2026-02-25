@@ -9,61 +9,125 @@
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--light-bg); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .container { background: white; max-width: 450px; width: 100%; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 8px solid var(--primary-blue); overflow: hidden; }
         .header { padding: 25px; text-align: center; border-bottom: 1px solid #eee; }
-        .logo { font-size: 22px; font-weight: bold; color: var(--primary-blue); margin: 0; }
-        .content { padding: 30px; }
-        .result-box { padding: 20px; border-radius: 8px; border: 1px solid #eee; background: #fff; }
-        .valid { border-color: var(--success-green); background-color: #f0fff4; }
-        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary-blue); margin: 0; }
+        .content { padding: 30px; text-align: center; }
+        
+        /* Welcome Section */
+        #welcome-section h2 { color: #333; font-size: 20px; margin-top: 0; }
+        #welcome-section p { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 25px; }
+        
+        /* Button Style */
+        .btn-verify { 
+            background-color: var(--primary-blue); color: white; border: none; padding: 15px 30px; 
+            font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%;
+            transition: background 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-verify:hover { background-color: var(--accent-blue); }
+
+        /* Result Section */
+        #result-section { display: none; text-align: left; }
+        .status-msg { text-align: center; color: var(--success-green); font-weight: bold; margin-bottom: 20px; font-size: 20px; }
+        .result-box { padding: 15px; border-radius: 8px; border: 1px solid #eee; background: #fff; margin-bottom: 15px; }
+        .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
         .detail-row:last-child { border-bottom: none; }
-        .label { color: #888; font-size: 14px; }
-        .value { color: #222; font-weight: bold; font-size: 15px; text-align: right; }
-        .status-msg { text-align: center; color: var(--success-green); font-weight: bold; margin-bottom: 20px; font-size: 18px; }
-        .footer { text-align: center; margin-top: 30px; }
+        .label { color: #888; font-size: 13px; }
+        .value { color: #222; font-weight: bold; font-size: 14px; text-align: right; }
+        
+        .instruction-box { background: #fffde7; border: 1px solid #ffe58f; padding: 15px; border-radius: 6px; font-size: 13px; color: #775500; margin-top: 20px; line-height: 1.5; }
+        
+        .footer { text-align: center; margin-top: 30px; padding-bottom: 20px; }
         .footer a { color: var(--accent-blue); text-decoration: none; font-size: 14px; font-weight: bold; }
+        
+        #loading { display: none; margin: 20px 0; color: var(--accent-blue); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header"><p class="logo">TALLO CPA</p></div>
+    
     <div class="content">
-        <div id="loading">Verifying...</div>
-        <div id="result" style="display:none;">
-            <div id="status" class="status-msg">✅ AUTHENTIC DOCUMENT</div>
+        <!-- Initial Landing Page -->
+        <div id="welcome-section">
+            <h2>Authentication Portal</h2>
+            <p>Welcome to the official <strong>Tallo CPA</strong> verification portal. To verify the document in your possession, please click the button below to retrieve the secure record.</p>
+            <button class="btn-verify" onclick="startAuthentication()">Start Authenticating</button>
+        </div>
+
+        <!-- Loading Message -->
+        <div id="loading">Connecting to Secure Registry...</div>
+
+        <!-- Hidden Result Page -->
+        <div id="result-section">
+            <div class="status-msg">✅ AUTHENTIC DOCUMENT</div>
+            
             <div class="result-box">
                 <div class="detail-row"><span class="label">Client:</span> <span class="value" id="res-name"></span></div>
                 <div class="detail-row"><span class="label">Audit Year:</span> <span class="value" id="res-year"></span></div>
                 <div class="detail-row"><span class="label">Cert ID:</span> <span class="value" id="res-id"></span></div>
-                <div class="detail-row"><span class="label">Verification Date:</span> <span class="value" id="res-date"></span></div>
+                <div class="detail-row"><span class="label">Official Registry Date:</span> <span class="value" id="res-date"></span></div>
             </div>
-            <p style="font-size: 12px; color: #999; margin-top: 15px; text-align: center;">
-                The details above must match the physical document in your possession.
-            </p>
+
+            <div class="instruction-box">
+                <strong>Important:</strong> The physical document you are holding is only valid if the Client Name, Audit Year, and Certificate ID match exactly with the details shown above.
+            </div>
         </div>
-        <div class="footer"><a href="https://www.tallocpa.com">Return to Homepage</a></div>
+
+        <div class="footer">
+            <a href="https://www.tallocpa.com">← Return to Homepage</a>
+        </div>
     </div>
 </div>
 
 <script>
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
+    const certId = params.get('id');
 
-    // Force refresh to bypass GitHub cache
-    fetch('database.json?nocache=' + new Date().getTime())
-        .then(r => r.json())
-        .then(data => {
-            document.getElementById('loading').style.display = 'none';
-            const cert = data[id];
-            if (cert) {
-                document.getElementById('result').style.display = 'block';
-                document.getElementById('res-name').innerText = cert.name;
-                document.getElementById('res-year').innerText = cert.year;
-                document.getElementById('res-id').innerText = id;
-                document.getElementById('res-date').innerText = cert.verifiedAt;
-            } else {
-                document.getElementById('loading').innerHTML = "<h3 style='color:red'>❌ Invalid Certificate</h3><p>This ID was not found in our records.</p>";
-            }
-        });
+    function startAuthentication() {
+        // 1. Hide Welcome, Show Loading
+        document.getElementById('welcome-section').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
+
+        // 2. Add a slight delay (800ms) to make it feel like a real security check
+        // and to give the server more time to serve the fresh file.
+        setTimeout(() => {
+            fetchData();
+        }, 800);
+    }
+
+    function fetchData() {
+        // Fetch with a cache-buster (timestamp) to ensure we get the latest file from GitHub
+        fetch('database.json?v=' + new Date().getTime())
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                
+                const cert = data[certId];
+                if (cert) {
+                    // Show Results
+                    document.getElementById('result-section').style.display = 'block';
+                    document.getElementById('res-name').innerText = cert.name;
+                    document.getElementById('res-year').innerText = cert.year;
+                    document.getElementById('res-id').innerText = certId;
+                    document.getElementById('res-date').innerText = cert.verifiedAt;
+                } else {
+                    // Show Error
+                    document.getElementById('loading').innerHTML = `
+                        <h3 style="color:#dc3545">❌ Record Not Found</h3>
+                        <p style="font-size:14px; color:#666;">This certificate ID could not be located in our registry. Please ensure you scanned the correct QR code.</p>
+                        <button class="btn-verify" style="background:#666;" onclick="location.reload()">Try Again</button>
+                    `;
+                    document.getElementById('loading').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').innerHTML = "Error connecting to registry. Please try again.";
+            });
+    }
 </script>
+
 </body>
 </html>
