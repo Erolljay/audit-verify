@@ -1582,5 +1582,17 @@
     "year": "2025",
     "classification": "Corporation (Full PFRS)",
     "verifiedAt": "4/8/2026"
+  },
+  "AC-537361": {
+    "name": "GRAND CANYON MULTI HOLDINGS INC.",
+    "year": "2025",
+    "classification": "Verified Audit",
+    "verifiedAt": "Original Issue Date"
+  },
+  "AC-941048": {
+    "name": "FIRST EASTERN LANDMARK CORPORATION",
+    "year": "2025",
+    "classification": "Verified Audit",
+    "verifiedAt": "Original Issue Date"
   }
 }
