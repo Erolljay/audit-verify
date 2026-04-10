@@ -2014,5 +2014,11 @@
     "year": "2025",
     "classification": "Verified Audit",
     "verifiedAt": "Original Issue Date"
+  },
+  "AC-491642": {
+    "name": "ACEBUQUE LENDING CORPORATION",
+    "year": "2025",
+    "classification": "Corporation (Full PFRS)",
+    "verifiedAt": "4/10/2026"
   }
 }
