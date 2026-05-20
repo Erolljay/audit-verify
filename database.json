@@ -2860,5 +2860,11 @@
     "year": "2025",
     "classification": "Verified Audit",
     "verifiedAt": "Original Issue Date"
+  },
+  "AC-537907": {
+    "name": "GEHAZI CORP.",
+    "year": "2025",
+    "classification": "Corporation - Stocks",
+    "verifiedAt": "5/20/2026"
   }
 }
