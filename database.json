@@ -2902,5 +2902,29 @@
     "year": "2026",
     "classification": "Single proprietor",
     "verifiedAt": "5/25/2026"
+  },
+  "AC-741599": {
+    "name": "ASTORGA SLP ASSOCIATION",
+    "year": "2025",
+    "classification": "Verified Audit",
+    "verifiedAt": "Original Issue Date"
+  },
+  "AC-571264": {
+    "name": "MOUNT-ZION CONSTRUCTION SERVICES",
+    "year": "2025",
+    "classification": "Verified Audit",
+    "verifiedAt": "Original Issue Date"
+  },
+  "AC-821603": {
+    "name": "PINGGOY MICRO GAS STATION",
+    "year": "2023",
+    "classification": "Verified Audit",
+    "verifiedAt": "Original Issue Date"
+  },
+  "AC-254651": {
+    "name": "PINGGOY MICRO GAS STATION",
+    "year": "2024",
+    "classification": "Verified Audit",
+    "verifiedAt": "Original Issue Date"
   }
 }
